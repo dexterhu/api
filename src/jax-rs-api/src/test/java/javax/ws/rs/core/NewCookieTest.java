@@ -46,6 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 
 public class NewCookieTest {
 
@@ -78,5 +79,25 @@ public class NewCookieTest {
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {
         }
+    }
+
+    @Test
+    public void testSameSite() {
+
+        NewCookie sameSiteOmit = new NewCookie("name", "value", "/", "localhost", 1, null, 0, null, false, false);
+        assertNull(sameSiteOmit.getSameSite());
+
+        NewCookie sameSiteNull = new NewCookie("name", "value", "/", "localhost", 1, null, 0, null, false, false, null);
+        assertNull(sameSiteNull.getSameSite());
+
+        NewCookie sameSiteNone = new NewCookie("name", "value", "/", "localhost", 1, null, 0, null, false, false, NewCookie.SameSite.NONE);
+        assertEquals(NewCookie.SameSite.NONE, sameSiteNone.getSameSite());
+
+        NewCookie sameSiteLax = new NewCookie("name", "value", "/", "localhost", 1, null, 0, null, false, false, NewCookie.SameSite.LAX);
+        assertEquals(NewCookie.SameSite.LAX, sameSiteLax.getSameSite());
+
+        NewCookie sameSiteStrict = new NewCookie("name", "value", "/", "localhost", 1, null, 0, null, false, false, NewCookie.SameSite.STRICT);
+        assertEquals(NewCookie.SameSite.STRICT, sameSiteStrict.getSameSite());
+
     }
 }
